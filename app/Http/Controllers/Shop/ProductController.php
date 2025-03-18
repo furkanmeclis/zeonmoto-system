@@ -13,7 +13,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $query = Product::query();
-
+        $query->where('is_active', 1);
         // Kategori filtresi
         if ($request->filled('category')) {
             $query->where('category', $request->category);
