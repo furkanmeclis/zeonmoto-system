@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Sitemap: https://zehirmotor.com/sitemap.xml
+
+# Disallow potentially sensitive directories
+Disallow: /admin/
+Disallow: /api/
+Disallow: /storage/
+Disallow: /vendor/

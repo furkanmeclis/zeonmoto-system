@@ -1,0 +1,9 @@
+{
+    "rules": [
+        {
+            "min": 0,
+            "max": null,
+            "multiplier": 1
+        }
+    ]
+}
