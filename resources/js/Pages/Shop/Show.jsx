@@ -15,7 +15,7 @@ const ProductDetails = ({ product }) => {
     const [quantity, setQuantity] = useState(1);
     const [loading, setLoading] = useState(false);
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
-    const { addToCart, getCartItem, updateQuantity, removeFromCart } = useCart();
+    const { addToCart, getCartItem, updateQuantity, removeFromCart, pricesVisible } = useCart();
     const cartItem = getCartItem(product.uniqid);
     let metaData = {
         description: `${product.name} - ${product.category} kategorisinde yer alan ürünümüzü inceleyin. SKU: ${product.sku}`,
@@ -103,7 +103,7 @@ const ProductDetails = ({ product }) => {
 
                     <div className="flex items-center space-x-4">
                         <span className="text-4xl font-bold text-yellow-500">
-                            {product.price.toLocaleString('tr-TR')} {product.is_tl === 1 ? '₺' : '$'}
+                            {pricesVisible ? product.price.toLocaleString('tr-TR') : '***'} ₺
                         </span>
                         {product.is_discount === 1 && (
                             <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">

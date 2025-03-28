@@ -357,6 +357,7 @@ class Product extends Model
 
     public static function newProductImageImport($images, $sku): bool
     {
+        return true;
         $sku = Str::upper(Str::slug($sku));
         $filesPath = public_path('uploads/images/' . $sku);
         if (!is_dir($filesPath)) {

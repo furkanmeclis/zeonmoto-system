@@ -7,8 +7,10 @@ import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Dropdown } from 'primereact/dropdown';
 import QRCode from 'react-qr-code';
+import { useCart } from '@/Components/Shop/CartContext';
 const SharedCart = ({ cart, total }) => {
     const { auth } = usePage().props;
+    const {  pricesVisible } = useCart();
     const [showShippingDialog, setShowShippingDialog] = useState(false);
     const [shippingInfo, setShippingInfo] = useState({
         fullName: auth?.user?.name || '',
@@ -110,14 +112,14 @@ const SharedCart = ({ cart, total }) => {
                             <tr key={item.id}>
                                 <td>{item.product.name}</td>
                                 <td className="text-center">{item.product.sku || '-'}</td>
-                                <td className="text-center">{formatCurrency(item.product.price)}</td>
+                                <td className="text-center">{pricesVisible ? formatCurrency(item.product.price) : '*** ₺'}</td>
                                 <td className="text-center">{item.quantity}</td>
-                                <td className="text-right">{formatCurrency(item.product.price * item.quantity)}</td>
+                                <td className="text-right">{pricesVisible ? formatCurrency(item.product.price * item.quantity) : '*** ₺'}</td>
                             </tr>
                         ))}
                         <tr className="font-bold">
                             <td colSpan="4" className="text-right">Genel Toplam:</td>
-                            <td className="text-right">{formatCurrency(total)}</td>
+                            <td className="text-right">{pricesVisible ? formatCurrency(total) : '*** ₺'}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -220,12 +222,12 @@ const SharedCart = ({ cart, total }) => {
                                                 Adet: {item.quantity}
                                             </p>
                                             <p className="mt-1 text-sm font-medium text-gray-900">
-                                                {formatCurrency(item.product.price)}
+                                                {pricesVisible ? formatCurrency(item.product.price) : '*** ₺'}
                                             </p>
                                         </div>
                                         <div className="text-right">
                                             <p className="text-sm font-medium text-gray-900">
-                                                Toplam: {formatCurrency(item.product.price * item.quantity)}
+                                                Toplam: {pricesVisible ? formatCurrency(item.product.price * item.quantity) : '*** ₺'}
                                             </p>
                                         </div>
                                     </motion.div>
@@ -237,7 +239,7 @@ const SharedCart = ({ cart, total }) => {
                                 <div className="flex justify-between items-center">
                                     <span className="text-base font-medium text-gray-900">Toplam</span>
                                     <span className="text-2xl font-semibold text-yellow-600">
-                                        {formatCurrency(total)}
+                                        {pricesVisible ? formatCurrency(total) : '*** ₺'}
                                     </span>
                                 </div>
                             </div>

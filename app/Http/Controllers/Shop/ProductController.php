@@ -60,7 +60,7 @@ class ProductController extends Controller
             'min' => (int)Product::min('price') ?: 0,
             'max' => (int)Product::max('price') ?: 9999
         ];
-
+        view()->share('key', "deneme");
         return Inertia::render('Shop/Index', [
             'products' => $products,
             'categories' => $categories->map(fn($category) => [

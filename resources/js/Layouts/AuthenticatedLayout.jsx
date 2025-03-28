@@ -40,6 +40,12 @@ function Authenticated({user, header, children, buttons = false, info = false}) 
             href: route('price-rules.index'),
             active: route().current('price-rules.index'),
             roles: ["admin","engineer"]
+        },
+        {
+            name: 'Pinler',
+            href: route('pins.index'),
+            active: route().current('pins.*'),
+            roles: ["admin","engineer"]
         }
     ]
     return (

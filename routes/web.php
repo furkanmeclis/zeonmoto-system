@@ -21,6 +21,11 @@ Route::get('/product/{uniqid}', [App\Http\Controllers\Shop\ProductController::cl
 
 
 Route::prefix('api')->group(function () {
+    // Pin Routes
+    Route::prefix('pin')->group(function () {
+        Route::post('/check', [\App\Http\Controllers\PinController::class, 'checkPin'])->name('api.pin.check');
+    });
+    
     // Cart Routes
     Route::prefix('cart')->group(function () {
         Route::get('/', [App\Http\Controllers\Shop\CartController::class, 'index'])->name('api.cart.index');
@@ -54,6 +59,12 @@ Route::prefix('api')->group(function () {
 Route::get('/shop/cart/{token}', [App\Http\Controllers\Shop\CartController::class, 'viewSharedCart'])->name('shop.cart.shared');
 
 Route::middleware('auth')->group(function () {
+    Route::prefix("/pin")->name("pins.")->middleware("only:admin,engineer")->group(function () {
+        Route::get("/", [\App\Http\Controllers\PinController::class, "index"])->name("index");
+        Route::post("/store", [\App\Http\Controllers\PinController::class, "store"])->name("store");
+        Route::put("/{id}/update", [\App\Http\Controllers\PinController::class, "update"])->name("update");
+        Route::delete("/{id}/delete", [\App\Http\Controllers\PinController::class, "destroy"])->name("destroy");
+    });
     Route::prefix("/kullanicilar")->name("users.")->middleware("only:admin,engineer")->group(function () {
         Route::get("/", [\App\Http\Controllers\UserController::class, "index"])->name("index");
         Route::get("/create", [\App\Http\Controllers\UserController::class, "create"])->name("create");

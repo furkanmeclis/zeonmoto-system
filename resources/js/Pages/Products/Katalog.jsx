@@ -5,7 +5,7 @@ import html2canvas from "html2canvas";
 import {PDFDocument} from "pdf-lib";
 import {Buffer} from "buffer";
 import catalogCKY from "../../../css/catalog.module.css";
-import {router} from "@inertiajs/react";
+import {router, Head} from "@inertiajs/react";
 import {Dialog} from 'primereact/dialog';
 import {ProgressBar} from "primereact/progressbar";
 import {InputText} from "primereact/inputtext";
@@ -19,11 +19,11 @@ import {useDebounce} from "primereact/hooks";
 import {getCatalogProducts} from "@/helpers/helper.js";
 import {BlockUI} from "primereact/blockui";
 
-const Katalog = ({auth, defaultImage, categories, csrf_token}) => {
+const Katalog = ({auth, categories, csrf_token}) => {
     const [visible, setVisible] = React.useState(false);
     const [productsAll, setProductsAll] = React.useState([]);
     const [products, setProducts] = React.useState([]);
-    const [logoImg, setLogoImg] = React.useState(defaultImage);
+    const [logoImg, setLogoImg] = React.useState("/logo.png");
     const pageRef = React.useRef();
     const filigranRef = React.useRef();
     const [loading, setLoading] = React.useState(true);
@@ -529,6 +529,7 @@ const Katalog = ({auth, defaultImage, categories, csrf_token}) => {
                     </BlockUI>
                 </div>
             </div>
+            <Head title="Katalog" />
         </AuthenticatedLayout>
     </>);
 };

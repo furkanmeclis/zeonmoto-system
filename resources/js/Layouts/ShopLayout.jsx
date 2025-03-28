@@ -7,6 +7,8 @@ import 'primereact/resources/primereact.min.css';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import QRCode from 'react-qr-code';
 import { Dialog } from 'primereact/dialog';
+import { InputText } from 'primereact/inputtext';
+import { Toast } from 'primereact/toast';
 
 const ShopLayout = ({ children }) => {
     const [showCart, setShowCart] = useState(false);
@@ -14,7 +16,10 @@ const ShopLayout = ({ children }) => {
     const [cartName, setCartName] = useState('');
     const [showShareDialog, setShowShareDialog] = useState(false);
     const [shareUrl, setShareUrl] = useState('');
-    const { cart, loading, updateCartName, clearCart, createOrder, getShareLink,fetchCart } = useCart();
+    const [showPinDialog, setShowPinDialog] = useState(false);
+    const [pinInput, setPinInput] = useState('');
+    const toastRef = React.useRef(null);
+    const { cart, loading, updateCartName, clearCart, updateQuantity, getShareLink, fetchCart, removeFromCart, pricesVisible, checkPin, resetPricesVisibility } = useCart();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -102,8 +107,34 @@ const ShopLayout = ({ children }) => {
         }, 0);
     };
 
+    const handlePinCheck = async () => {
+        if (pinInput.length !== 6 || !/^\d+$/.test(pinInput)) {
+            toastRef.current.show({ severity: 'error', summary: 'Hata', detail: 'PIN 6 haneli rakam olmalıdır.', life: 3000 });
+            return;
+        }
+
+        try {
+            const response = await checkPin(pinInput);
+            if (response.valid) {
+                toastRef.current.show({ severity: 'success', summary: 'Başarılı', detail: 'PIN doğrulandı. Fiyatlar görünür.', life: 3000 });
+                setShowPinDialog(false);
+                setPinInput('');
+            } else {
+                toastRef.current.show({ severity: 'error', summary: 'Hata', detail: 'Geçersiz PIN.', life: 3000 });
+            }
+        } catch (error) {
+            toastRef.current.show({ severity: 'error', summary: 'Hata', detail: 'PIN kontrolü sırasında bir hata oluştu.', life: 3000 });
+        }
+    };
+
+    const handleResetPricesVisibility = () => {
+        resetPricesVisibility();
+        toastRef.current.show({ severity: 'info', summary: 'Bilgi', detail: 'Fiyat görünürlüğü kapatıldı.', life: 3000 });
+    };
+
     return (
         <>
+            <Toast ref={toastRef} />
             <div className="min-h-screen bg-gray-50">
                 {/* Navbar */}
                 <motion.nav
@@ -199,7 +230,7 @@ const ShopLayout = ({ children }) => {
                                     <svg className="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                                     </svg>
-                                    <p>Sepetiniz boş</p>
+                                    <p>Sepetiniz boş</p> 
                                 </div>
                             ) : (
                                 <div className="space-y-4">
@@ -238,7 +269,7 @@ const ShopLayout = ({ children }) => {
                                             </div>
                                             <div className="text-right">
                                                 <p className="font-medium text-yellow-500">
-                                                    {(item.product.price * item.quantity).toLocaleString('tr-TR')} {item.product.is_tl === 1 ? '₺' : '$'}
+                                                    {pricesVisible ? (item.product.price * item.quantity).toLocaleString('tr-TR') : '***'} ₺
                                                 </p>
                                                 <button
                                                     onClick={() => removeFromCart(item.id)}
@@ -302,7 +333,7 @@ const ShopLayout = ({ children }) => {
                         <div className="flex flex-col items-center justify-center p-4">
                             <QRCode value={shareUrl} size={200} />
                         </div>
-
+                        
                         <div className="flex items-center space-x-2">
                             <input
                                 type="text"
@@ -313,7 +344,7 @@ const ShopLayout = ({ children }) => {
                             <button
                                 onClick={() => {
                                     navigator.clipboard.writeText(shareUrl);
-                                    // TODO: Toast message ekle
+                                    toastRef.current.show({ severity: 'success', summary: 'Başarılı', detail: 'Link kopyalandı.', life: 3000 });
                                 }}
                                 className="bg-yellow-500 text-white p-2 rounded-md hover:bg-yellow-600 transition-colors"
                             >
@@ -322,6 +353,56 @@ const ShopLayout = ({ children }) => {
                         </div>
                     </div>
                 </Dialog>
+
+                {/* PIN Kontrol Dialog'u */}
+                <Dialog
+                    visible={showPinDialog}
+                    onHide={() => setShowPinDialog(false)}
+                    header="PIN Doğrulama"
+                    className="w-[90vw] md:w-[400px]"
+                >
+                    <div className="space-y-6 p-4">
+                        <p className="text-gray-600 mb-4">Fiyatları görmek için 6 haneli PIN kodunu giriniz:</p>
+                        
+                        <div className="flex flex-col space-y-4">
+                            <InputText 
+                                value={pinInput} 
+                                onChange={(e) => setPinInput(e.target.value)}
+                                keyfilter="int"
+                                maxLength={6}
+                                placeholder="6 haneli PIN"
+                                className="p-inputtext-lg"
+                            />
+                            
+                            <button
+                                onClick={handlePinCheck}
+                                className="w-full bg-yellow-500 text-white py-2 px-4 rounded-md font-medium hover:bg-yellow-600 transition-colors"
+                            >
+                                Doğrula
+                            </button>
+                        </div>
+                    </div>
+                </Dialog>
+
+                {/* Fiyat Görünürlüğü Butonu */}
+                <div className="fixed bottom-6 left-6 z-50">
+                    <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => pricesVisible ? handleResetPricesVisibility() : setShowPinDialog(true)}
+                        className={`p-3 rounded-full shadow-lg ${pricesVisible ? 'bg-green-500' : 'bg-red-500'} text-white`}
+                    >
+                        {pricesVisible ? (
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                            </svg>
+                        ) : (
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                        )}
+                    </motion.button>
+                </div>
 
                 {/* Footer */}
                 <footer className="bg-gray-900 text-white mt-16">

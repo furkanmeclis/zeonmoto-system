@@ -6,6 +6,11 @@ const CartContext = createContext();
 export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [pricesVisible, setPricesVisible] = useState(() => {
+        // LocalStorage'dan pricesVisible değerini al
+        const storedPricesVisible = localStorage.getItem('pricesVisible');
+        return storedPricesVisible === 'true';
+    });
 
     const fetchCart = async () => {
         try {
@@ -128,11 +133,34 @@ export const CartProvider = ({ children }) => {
             setLoading(false);
         }
     };
+    
+    const checkPin = async (pin) => {
+        setLoading(true);
+        try {
+            const response = await axios.post('/api/pin/check', { pin });
+            if (response.data.valid) {
+                setPricesVisible(true);
+                localStorage.setItem('pricesVisible', 'true');
+            }
+            return response.data;
+        } catch (error) {
+            console.error('PIN kontrolü sırasında hata oluştu:', error);
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    };
+    
+    const resetPricesVisibility = () => {
+        setPricesVisible(false);
+        localStorage.setItem('pricesVisible', 'false');
+    };
 
     return (
         <CartContext.Provider value={{
             cart,
             loading,
+            pricesVisible,
             addToCart,
             updateQuantity,
             removeFromCart,
@@ -141,7 +169,9 @@ export const CartProvider = ({ children }) => {
             fetchCart,
             clearCart,
             createOrder,
-            getShareLink
+            getShareLink,
+            checkPin,
+            resetPricesVisibility
         }}>
             {children}
         </CartContext.Provider>

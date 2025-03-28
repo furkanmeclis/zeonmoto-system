@@ -5,7 +5,7 @@ import { useCart } from './CartContext';
 
 const ProductCard = ({ product }) => {
     const [loading, setLoading] = useState(false);
-    const { addToCart, getCartItem, updateQuantity, removeFromCart } = useCart();
+    const { addToCart, getCartItem, updateQuantity, removeFromCart, pricesVisible } = useCart();
     const cartItem = getCartItem(product.uniqid);
 
     const handleAddToCart = async () => {
@@ -70,7 +70,7 @@ const ProductCard = ({ product }) => {
 
                 <div className="flex items-center justify-between">
                     <span className="text-xl font-bold text-yellow-600">
-                        {product.price.toLocaleString('tr-TR')} {product.is_tl === 1 ? '₺' : '$'}
+                        {pricesVisible ? product.price.toLocaleString('tr-TR') : '***'} ₺
                     </span>
                 </div>
 
