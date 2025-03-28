@@ -5,6 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\PriceRuleController;
+use Illuminate\Support\Facades\Artisan;
 
 Route::get('/home', function () {
     return redirect()->route('new-shop.index');
@@ -100,5 +101,7 @@ Route::middleware('auth')->group(function () {
 
 // Sitemap
 Route::get('sitemap.xml', [App\Http\Controllers\SitemapController::class, 'index']);
-
+Route::get('/migrate',function (){
+    Artisan::call('migrate');
+});
 require __DIR__ . '/auth.php';
