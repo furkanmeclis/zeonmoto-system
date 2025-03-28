@@ -3,9 +3,8 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        
+        <title inertia>{{ config('app.name', 'Zehir Motor') }}</title>
         @if(isset($meta))
-            <title>{{ $meta['title'] }}</title>
             <meta name="description" content="{{ $meta['description'] }}">
             <meta name="keywords" content="{{ $meta['keywords'] }}">
             <meta property="og:title" content="{{ $meta['ogTitle'] }}">
