@@ -8,17 +8,20 @@
             <title>{{ $meta['title'] }}</title>
             <meta name="description" content="{{ $meta['description'] }}">
             <meta name="keywords" content="{{ $meta['keywords'] }}">
-            <meta property="og:title" content="{{ $meta['title'] }}">
-            <meta property="og:description" content="{{ $meta['description'] }}">
-            <meta property="og:image" content="{{ $meta['image'] }}">
-            <meta property="og:url" content="{{ url()->current() }}">
+            <meta property="og:title" content="{{ $meta['ogTitle'] }}">
+            <meta property="og:description" content="{{ $meta['ogDescription'] }}">
+            <meta property="og:image" content="{{ $meta['ogImage'] }}">
+            <meta property="og:url" content="{{ $meta['ogUrl'] }}">
             <meta name="twitter:card" content="summary_large_image">
+            <link rel="canonical" href="{{ $meta['canonicalUrl'] }}">
         @else
             <title inertia>{{ config('app.name', 'Zehir Motor') }}</title>
         @endif
 
+        @if(!isset($meta))
         <!-- Canonical URL -->
         <link rel="canonical" href="{{ url('/') }}">
+        @endif
 
         <!-- Favicon and PWA Icons -->
         <link rel="icon" type="image/png" href="/logo.png">

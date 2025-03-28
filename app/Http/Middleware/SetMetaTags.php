@@ -22,7 +22,12 @@ class SetMetaTags
             'title' => 'Zeon Moto',
             'description' => 'Motosiklet yedek parçaları ve aksesuarları',
             'image' => '/logo.png',
-            'keywords' => 'motosiklet, yedek parça, aksesuar, zeon moto'
+            'keywords' => 'motosiklet, yedek parça, aksesuar, zeon moto',
+            'ogTitle' => 'Zeon Moto',
+            'ogDescription' => 'Motosiklet yedek parçaları ve aksesuarları',
+            'ogImage' => '/logo.png',
+            'ogUrl' => url()->current(),
+            'canonicalUrl' => url()->current()
         ];
         
         // Route'a göre meta değerlerini değiştir
@@ -37,7 +42,12 @@ class SetMetaTags
                     'title' => $product->name . ' - Zeon Moto',
                     'description' => $product->description ?? 'Motosiklet yedek parçaları',
                     'image' => $product->images[0] ?? '/logo.png',
-                    'keywords' => $product->category . ', ' . $product->name . ', motosiklet yedek parça'
+                    'keywords' => $product->category . ', ' . $product->name . ', motosiklet yedek parça',
+                    'ogTitle' => $product->name . ' - Zeon Moto',
+                    'ogDescription' => $product->description ?? 'Motosiklet yedek parçaları',
+                    'ogImage' => $product->images[0] ?? '/logo.png',
+                    'ogUrl' => url()->current(),
+                    'canonicalUrl' => url()->current()
                 ];
             }
         } elseif ($routeName === 'new-shop.index') {
@@ -45,7 +55,12 @@ class SetMetaTags
                 'title' => 'Anasayfa - Zeon Moto',
                 'description' => 'Zeon Moto - Motosiklet yedek parçaları ve aksesuarları',
                 'image' => '/logo.png',
-                'keywords' => 'motosiklet, yedek parça, aksesuar, zeon moto, anasayfa'
+                'keywords' => 'motosiklet, yedek parça, aksesuar, zeon moto, anasayfa',
+                'ogTitle' => 'Anasayfa - Zeon Moto',
+                'ogDescription' => 'Zeon Moto - Motosiklet yedek parçaları ve aksesuarları',
+                'ogImage' => '/logo.png',
+                'ogUrl' => url()->current(),
+                'canonicalUrl' => url()->current()
             ];
         }
         
