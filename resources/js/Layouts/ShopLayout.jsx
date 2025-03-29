@@ -81,7 +81,11 @@ const ShopLayout = ({ children }) => {
                 `Merhaba Zeon MOTO, sepetim linktedir dönüşünüzü bekliyor olacağım\n\n${shareResponse.share_url}`
             );
 
-            window.open(`https://wa.me/905070004777?text=${message}`, '_blank');
+            const a = document.createElement('a');
+            a.href = `https://wa.me/905070004777?text=${message}`;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            a.click();
             await fetchCart();
         } catch (error) {
             console.error('WhatsApp siparişi oluşturulurken hata oluştu:', error);
