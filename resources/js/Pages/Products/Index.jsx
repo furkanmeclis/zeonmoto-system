@@ -36,9 +36,9 @@ const Index = ({auth, csrf_token, categories}) => {
     const [productCategories, setProductCategories] = useState(categories);
     const [addProductVisible, setAddProductVisible] = useState(false);
     const [updateProductVisible, setUpdateProductVisible] = useState(false);
-    const [includePrice, setIncludePrice] = useState(true);
-    const [onlyPrice, setOnlyPrice] = useState(false);
-    const [onlyCalculatedPrice, setOnlyCalculatedPrice] = useState(false);
+    const [includePrice, setIncludePrice] = useState(false);
+    const [onlyPrice, setOnlyPrice] = useState(true);
+    const [onlyCalculatedPrice, setOnlyCalculatedPrice] = useState(true);
     useEffect(() => {
         getAllProducts(csrf_token).then((response) => {
             if (response.status) {
@@ -505,26 +505,19 @@ const Index = ({auth, csrf_token, categories}) => {
                                 size="small" loading={loading} className="p-button-success"/>
                     </>}
                     onHide={() => setProductSyncVisible(false)} header={"Ürün Eşitlemesi"}>
-                <div className="flex items-center">
-                    <Checkbox inputId="ingredient1" name="pizza" value="Cheese" onChange={(event) => {
-                        setIncludePrice(event.target.checked);
-                    }}
-                              checked={includePrice}/>
-                    <label htmlFor="ingredient1" className="ml-2">Ürün Fiyatlarını Dahil Et</label>
-                </div>
                 <div className="flex items-center mt-3">
                     <Checkbox inputId="ingredient12" name="pizza" value="Cheese" onChange={(event) => {
                         setOnlyPrice(event.target.checked);
                     }}
                               checked={onlyPrice}/>
-                    <label htmlFor="ingredient12" className="ml-2">Sadece Fiyatları Dahil Et(Yeni Ürünler Eklenir,Mevcut ürünlere ait aktiflik deaktiflik durumları değişmez)</label>
+                    <label htmlFor="ingredient12" className="ml-2">Sadece Satış Fiyatlarını Dahil Et(Yeni Ürünler Eklenir,Mevcut ürünlere ait aktiflik deaktiflik durumları değişmez)</label>
                 </div>
                 <div className="flex items-center mt-3">
                     <Checkbox inputId="ingredient122" name="pizza" value="Cheese" onChange={(event) => {
                         setOnlyCalculatedPrice(event.target.checked);
                     }}
                               checked={onlyCalculatedPrice}/>
-                    <label htmlFor="ingredient122" className="ml-2">Sadece Hesaplanan Fiyatları Dahil Et(Yeni Ürünler Eklenir,Mevcut ürünlere ait aktiflik deaktiflik durumları değişmez)</label>
+                    <label htmlFor="ingredient122" className="ml-2">Sadece Hesaplanan CKYDEN HESAPLANAN Fiyatları Dahil Et(Yeni Ürünler Eklenir,Mevcut ürünlere ait aktiflik deaktiflik durumları değişmez)</label>
                 </div>
                 <Divider />
                 <p className="text-semibold">
