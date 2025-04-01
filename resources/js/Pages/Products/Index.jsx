@@ -521,7 +521,10 @@ const Index = ({auth, csrf_token, categories}) => {
                 </div>
                 <Divider />
                 <p className="text-semibold">
-                    Eşitleme Kaynağı <b className={"text-red-500"}>CKYMOTOSERVICE.COM</b>
+                    Eşitleme Kaynağı <b className={"text-red-500"}>CKYMOTOSERVICE.COM</b><br />
+                    İKİSİ KAPALI OLDUĞUNDA STOK GÜNCELLER. <br />
+                    Birincisi Açıkken Satış fiyatları değişir <br />
+                    hem birinci hem ikinci açıkken sadece hesaplanan fiyat değişir.
                 </p>
             </Dialog>
         </AuthenticatedLayout>
