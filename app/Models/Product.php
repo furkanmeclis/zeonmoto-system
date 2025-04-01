@@ -305,7 +305,7 @@ class Product extends Model
         return $products;
     }
 
-    public static function poisonProductsImport($products, $importPrices = true,$onlyPrice = false)
+    public static function poisonProductsImport($products, $importPrices = true,$onlyPrice = false,$onlyCalculatedPrice = false)
     {
         $systemLog = [];
         $inserted = 0;
@@ -317,12 +317,16 @@ class Product extends Model
             $existsProduct = self::where('uniqid', $product->uniqid)->first();
             if ($existsProduct) {
                 if ($importPrices) {
-                    $existsProduct->price = PriceRuleService::calculatePrice($product->price);
-                    $existsProduct->calculated_price = $product->price;
+                    if($onlyCalculatedPrice) {
+                        $existsProduct->price = PriceRuleService::calculatePrice($product->price);
+                    }
+                    $existsProduct->calculated_price = PriceRuleService::calculatePrice($product->price);
                 }
                 if($onlyPrice) {
-                    $existsProduct->price = PriceRuleService::calculatePrice($product->price);
-                    $existsProduct->calculated_price = $product->price;
+                    if($onlyCalculatedPrice) {
+                        $existsProduct->price = PriceRuleService::calculatePrice($product->price);
+                    }
+                    $existsProduct->calculated_price = PriceRuleService::calculatePrice($product->price);
                 }else{
                     $existsProduct->sku = $product->sku;
                     $existsProduct->is_new = $product->is_new;
@@ -396,5 +400,16 @@ class Product extends Model
     public function category(): string
     {
         return $this->category;
+    }
+    protected static function boot()
+    {
+        parent::boot();
+        static::created(function ($product) {
+          if($product->source != 'api') {
+            $product->source = 'manual';
+            $product->save();
+          }
+        });
+
     }
 }

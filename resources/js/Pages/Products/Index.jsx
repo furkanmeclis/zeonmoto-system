@@ -38,6 +38,7 @@ const Index = ({auth, csrf_token, categories}) => {
     const [updateProductVisible, setUpdateProductVisible] = useState(false);
     const [includePrice, setIncludePrice] = useState(true);
     const [onlyPrice, setOnlyPrice] = useState(false);
+    const [onlyCalculatedPrice, setOnlyCalculatedPrice] = useState(false);
     useEffect(() => {
         getAllProducts(csrf_token).then((response) => {
             if (response.status) {
@@ -454,7 +455,8 @@ const Index = ({auth, csrf_token, categories}) => {
                                         },
                                         body: JSON.stringify({
                                             includePrice: includePrice,
-                                            onlyPrice: onlyPrice
+                                            onlyPrice: onlyPrice,
+                                            onlyCalculatedPrice: onlyCalculatedPrice
                                         })
                                     }).then((response) => {
                                         return response.json();
@@ -516,6 +518,13 @@ const Index = ({auth, csrf_token, categories}) => {
                     }}
                               checked={onlyPrice}/>
                     <label htmlFor="ingredient12" className="ml-2">Sadece Fiyatları Dahil Et(Yeni Ürünler Eklenir,Mevcut ürünlere ait aktiflik deaktiflik durumları değişmez)</label>
+                </div>
+                <div className="flex items-center mt-3">
+                    <Checkbox inputId="ingredient122" name="pizza" value="Cheese" onChange={(event) => {
+                        setOnlyCalculatedPrice(event.target.checked);
+                    }}
+                              checked={onlyCalculatedPrice}/>
+                    <label htmlFor="ingredient122" className="ml-2">Sadece Hesaplanan Fiyatları Dahil Et(Yeni Ürünler Eklenir,Mevcut ürünlere ait aktiflik deaktiflik durumları değişmez)</label>
                 </div>
                 <Divider />
                 <p className="text-semibold">
