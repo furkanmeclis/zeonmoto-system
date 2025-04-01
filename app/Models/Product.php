@@ -342,28 +342,27 @@ class Product extends Model
                 $systemLog[] = $product->uniqid . " Uniqidine Sahip Ürün Güncellendi " . date("d.m.Y H:i:s");
                 $updated++;
             } else {
-                if($onlyExists) {
-                    continue;
-                }
-                $newProduct = new Product();
-                $newProduct->order = $product->order;
-                $newProduct->sku = $product->sku;
-                $newProduct->name = $product->name;
-                $newProduct->category = $product->category;
-                $newProduct->price = PriceRuleService::calculatePrice($product->price);
-                $newProduct->calculated_price = PriceRuleService::calculatePrice($product->price);
-                $newProduct->is_new = $product->is_new;
-                $newProduct->is_discount = $product->is_discount;
-                $newProduct->is_active = $product->is_active;
-                $newProduct->source = 'api';
-                $newProduct->is_tl = 1;
-                $newProduct->uniqid = $product->uniqid;
-                if ($newProduct->save() && self::newProductImageImport($product->images, $newProduct->sku)) {
-                    $systemLog[] = $newProduct->uniqid . " Yeni Ürün Eklendi " . date("d.m.Y H:i:s");
-                    $inserted++;
-                } else {
-                    $newProduct->delete();
-                    $systemLog[] = $newProduct->uniqid . " Ürün Eklenemedi " . date("d.m.Y H:i:s");
+                if(!$onlyExists) {
+                    $newProduct = new Product();
+                    $newProduct->order = $product->order;
+                    $newProduct->sku = $product->sku;
+                    $newProduct->name = $product->name;
+                    $newProduct->category = $product->category;
+                    $newProduct->price = PriceRuleService::calculatePrice($product->price);
+                    $newProduct->calculated_price = PriceRuleService::calculatePrice($product->price);
+                    $newProduct->is_new = $product->is_new;
+                    $newProduct->is_discount = $product->is_discount;
+                    $newProduct->is_active = $product->is_active;
+                    $newProduct->source = 'api';
+                    $newProduct->is_tl = 1;
+                    $newProduct->uniqid = $product->uniqid;
+                    if ($newProduct->save() && self::newProductImageImport($product->images, $newProduct->sku)) {
+                        $systemLog[] = $newProduct->uniqid . " Yeni Ürün Eklendi " . date("d.m.Y H:i:s");
+                        $inserted++;
+                    } else {
+                        $newProduct->delete();
+                        $systemLog[] = $newProduct->uniqid . " Ürün Eklenemedi " . date("d.m.Y H:i:s");
+                    }
                 }
             }
         }
