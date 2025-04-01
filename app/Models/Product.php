@@ -318,11 +318,11 @@ class Product extends Model
             if ($existsProduct) {
                 if ($importPrices) {
                     $existsProduct->price = PriceRuleService::calculatePrice($product->price);
-                    $existsProduct->calculated_price = PriceRuleService::calculatePrice($product->price);
+                    $existsProduct->calculated_price = $product->price;
                 }
                 if($onlyPrice) {
                     $existsProduct->price = PriceRuleService::calculatePrice($product->price);
-                    $existsProduct->calculated_price = PriceRuleService::calculatePrice($product->price);
+                    $existsProduct->calculated_price = $product->price;
                 }else{
                     $existsProduct->sku = $product->sku;
                     $existsProduct->is_new = $product->is_new;
