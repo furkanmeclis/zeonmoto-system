@@ -457,7 +457,8 @@ const Index = ({auth, csrf_token, categories}) => {
                                         body: JSON.stringify({
                                             includePrice: includePrice,
                                             onlyPrice: onlyPrice,
-                                            onlyCalculatedPrice: onlyCalculatedPrice
+                                            onlyCalculatedPrice: onlyCalculatedPrice,
+                                            onlyExists: onlyExists
                                         })
                                     }).then((response) => {
                                         return response.json();
