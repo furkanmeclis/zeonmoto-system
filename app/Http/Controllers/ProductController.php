@@ -296,13 +296,14 @@ class ProductController extends Controller
         $includePrices = @json_decode($request->getContent(), true)["includePrice"] ?? false;
         $onlyPrice = @json_decode($request->getContent(), true)["onlyPrice"] ?? false;
         $onlyCalculatedPrice = @json_decode($request->getContent(), true)["onlyCalculatedPrice"] ?? false;
+        $onlyExists = @json_decode($request->getContent(), true)["onlyExists"] ?? false;
         try {
             $response = \Illuminate\Support\Facades\Http::post($ep);
             if ($response->successful()) {
                 $response = $response->json();
                 $products = $response['products'];
                 $categories = $response['categories'];
-                $resultProducts = Product::poisonProductsImport($products, $includePrices,$onlyPrice,$onlyCalculatedPrice);
+                $resultProducts = Product::poisonProductsImport($products, $includePrices,$onlyPrice,$onlyCalculatedPrice,$onlyExists);
                 $resultCategories = Category::poisonImportCategories($categories);
                 return [
                     'status' => true,

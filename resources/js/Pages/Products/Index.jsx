@@ -39,6 +39,7 @@ const Index = ({auth, csrf_token, categories}) => {
     const [includePrice, setIncludePrice] = useState(false);
     const [onlyPrice, setOnlyPrice] = useState(true);
     const [onlyCalculatedPrice, setOnlyCalculatedPrice] = useState(true);
+    const [onlyExists, setOnlyExists] = useState(true);
     useEffect(() => {
         getAllProducts(csrf_token).then((response) => {
             if (response.status) {
@@ -518,6 +519,13 @@ const Index = ({auth, csrf_token, categories}) => {
                     }}
                               checked={onlyCalculatedPrice}/>
                     <label htmlFor="ingredient122" className="ml-2">Sadece Hesaplanan CKYDEN HESAPLANAN Fiyatları Dahil Et(Yeni Ürünler Eklenir,Mevcut ürünlere ait aktiflik deaktiflik durumları değişmez)</label>
+                </div>
+                <div className="flex items-center mt-3">
+                    <Checkbox inputId="ingredient123" name="pizza" value="Cheese" onChange={(event) => {
+                        setOnlyExists(event.target.checked);
+                    }}
+                              checked={onlyExists}/>
+                    <label htmlFor="ingredient123" className="ml-2">Sadece Mevcut Ürünler Dahil Et(Yeni Ürünler eklenmez)</label>
                 </div>
                 <Divider />
                 <p className="text-semibold">

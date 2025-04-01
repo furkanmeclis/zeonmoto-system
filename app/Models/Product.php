@@ -305,7 +305,7 @@ class Product extends Model
         return $products;
     }
 
-    public static function poisonProductsImport($products, $importPrices = true,$onlyPrice = false,$onlyCalculatedPrice = false)
+    public static function poisonProductsImport($products, $importPrices = true,$onlyPrice = false,$onlyCalculatedPrice = false,$onlyExists = false)
     {
         $systemLog = [];
         $inserted = 0;
@@ -342,6 +342,9 @@ class Product extends Model
                 $systemLog[] = $product->uniqid . " Uniqidine Sahip Ürün Güncellendi " . date("d.m.Y H:i:s");
                 $updated++;
             } else {
+                if($onlyExists) {
+                    continue;
+                }
                 $newProduct = new Product();
                 $newProduct->order = $product->order;
                 $newProduct->sku = $product->sku;
