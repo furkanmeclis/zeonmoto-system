@@ -329,7 +329,8 @@ class Product extends Model
                     }else{
                         $existsProduct->price = PriceRuleService::calculatePrice($product->price);
                     }
-                }else{
+                }
+                if(!($onlyPrice || $onlyCalculatedPrice)){
                     $existsProduct->sku = $product->sku;
                     $existsProduct->is_new = $product->is_new;
                     $existsProduct->is_discount = $product->is_discount;
