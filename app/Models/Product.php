@@ -305,25 +305,32 @@ class Product extends Model
         return $products;
     }
 
-    public static function poisonProductsImport($products, $importPrices = true)
+    public static function poisonProductsImport($products, $importPrices = true,$onlyPrice = false)
     {
         $systemLog = [];
         $inserted = 0;
         $updated = 0;
         foreach ($products as $product) {
             $product = (object)$product;
-            $existsProduct = self::where('uniqid', $product->uniqid)->first();
             $product->sku = Str::replace('ZHR', 'ONR', $product->sku);
             $product->uniqid = Str::replace('ZHR', 'ONR', $product->uniqid);
+            $existsProduct = self::where('uniqid', $product->uniqid)->first();
             if ($existsProduct) {
                 if ($importPrices) {
                     $existsProduct->price = PriceRuleService::calculatePrice($product->price);
+                    $existsProduct->calculated_price = PriceRuleService::calculatePrice($product->price);
                 }
-                $existsProduct->sku = $product->sku;
-                $existsProduct->is_new = $product->is_new;
-                $existsProduct->is_discount = $product->is_discount;
-                $existsProduct->is_active = $product->is_active;
-                $existsProduct->is_tl = 1;
+                if($onlyPrice) {
+                    $existsProduct->price = PriceRuleService::calculatePrice($product->price);
+                    $existsProduct->calculated_price = PriceRuleService::calculatePrice($product->price);
+                }else{
+                    $existsProduct->sku = $product->sku;
+                    $existsProduct->is_new = $product->is_new;
+                    $existsProduct->is_discount = $product->is_discount;
+                    $existsProduct->is_active = $product->is_active;
+                    $existsProduct->is_tl = 1;
+                }
+                $existsProduct->source = 'api';
                 $existsProduct->save();
                 $systemLog[] = $product->uniqid . " Uniqidine Sahip Ürün Güncellendi " . date("d.m.Y H:i:s");
                 $updated++;
@@ -334,9 +341,11 @@ class Product extends Model
                 $newProduct->name = $product->name;
                 $newProduct->category = $product->category;
                 $newProduct->price = PriceRuleService::calculatePrice($product->price);
+                $newProduct->calculated_price = PriceRuleService::calculatePrice($product->price);
                 $newProduct->is_new = $product->is_new;
                 $newProduct->is_discount = $product->is_discount;
                 $newProduct->is_active = $product->is_active;
+                $newProduct->source = 'api';
                 $newProduct->is_tl = 1;
                 $newProduct->uniqid = $product->uniqid;
                 if ($newProduct->save() && self::newProductImageImport($product->images, $newProduct->sku)) {
@@ -357,6 +366,9 @@ class Product extends Model
 
     public static function newProductImageImport($images, $sku): bool
     {
+        if(env('APP_ENV') === 'local') {
+            return true;
+        }
         $sku = Str::upper(Str::slug($sku));
         $filesPath = public_path('uploads/images/' . $sku);
         if (!is_dir($filesPath)) {

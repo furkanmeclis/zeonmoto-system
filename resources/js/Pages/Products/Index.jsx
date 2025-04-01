@@ -37,6 +37,7 @@ const Index = ({auth, csrf_token, categories}) => {
     const [addProductVisible, setAddProductVisible] = useState(false);
     const [updateProductVisible, setUpdateProductVisible] = useState(false);
     const [includePrice, setIncludePrice] = useState(true);
+    const [onlyPrice, setOnlyPrice] = useState(false);
     useEffect(() => {
         getAllProducts(csrf_token).then((response) => {
             if (response.status) {
@@ -203,7 +204,9 @@ const Index = ({auth, csrf_token, categories}) => {
                             sku: {value: null, matchMode: FilterMatchMode.CONTAINS},
                             category: {value: null, matchMode: FilterMatchMode.EQUALS},
                             price: {value: null, matchMode: FilterMatchMode.CONTAINS,},
-                            is_active: {value: null, matchMode: FilterMatchMode.EQUALS}
+                            is_active: {value: null, matchMode: FilterMatchMode.EQUALS},
+                            source: {value: null, matchMode: FilterMatchMode.EQUALS},
+                            calculated_price: {value: null, matchMode: FilterMatchMode.CONTAINS,}
                         }}
                                    loading={loading}
                                    header={<>
@@ -319,6 +322,13 @@ const Index = ({auth, csrf_token, categories}) => {
                                 />
 
                             }}></Column>
+                            <Column field="calculated_price" filter showFilterMenu={false}
+                                    filterPlaceholder={"Ürün Hesaplanmış Fiyatına Göre"}
+                                    sortable={true} header="Ürün Hesaplanmış Fiyatı"
+                            ></Column>
+                            <Column field="source"
+                                    sortable={true} header="Ürün Eklenme Tipi"
+                            ></Column>
                             <Column field="price" filter showFilterMenu={false} filterPlaceholder={"Ürün Fiyatına Göre"}
                                     editor={(options) => <InputNumber placeholder="Ürün Fiyatı" mode={"currency"}
                                                                       disabled={loading}
@@ -443,7 +453,8 @@ const Index = ({auth, csrf_token, categories}) => {
                                             'X-CSRF-TOKEN': csrf_token,
                                         },
                                         body: JSON.stringify({
-                                            includePrice: includePrice
+                                            includePrice: includePrice,
+                                            onlyPrice: onlyPrice
                                         })
                                     }).then((response) => {
                                         return response.json();
@@ -498,6 +509,13 @@ const Index = ({auth, csrf_token, categories}) => {
                     }}
                               checked={includePrice}/>
                     <label htmlFor="ingredient1" className="ml-2">Ürün Fiyatlarını Dahil Et</label>
+                </div>
+                <div className="flex items-center mt-3">
+                    <Checkbox inputId="ingredient12" name="pizza" value="Cheese" onChange={(event) => {
+                        setOnlyPrice(event.target.checked);
+                    }}
+                              checked={onlyPrice}/>
+                    <label htmlFor="ingredient12" className="ml-2">Sadece Fiyatları Dahil Et(Yeni Ürünler Eklenir,Mevcut ürünlere ait aktiflik deaktiflik durumları değişmez)</label>
                 </div>
                 <Divider />
                 <p className="text-semibold">

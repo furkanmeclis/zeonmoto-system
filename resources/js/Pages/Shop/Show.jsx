@@ -62,7 +62,7 @@ const ProductDetails = ({ product }) => {
                                 <img
                                     src={image}
                                     alt={`${product.name} - ${index + 1}`}
-                                    className="w-full h-full object-cover"
+                                    className="w-full h-full object-contain"
                                 />
                             </SwiperSlide>
                         ))}
@@ -84,7 +84,7 @@ const ProductDetails = ({ product }) => {
                                 >
                                     <img
                                         src={image}
-                                        className="w-full h-full object-cover"
+                                        className="w-full h-full object-contain"
                                         alt={`${product.name} - Thumbnail ${index + 1}`}
                                     />
                                 </motion.div>

@@ -294,14 +294,14 @@ class ProductController extends Controller
     {
         $ep = env("CKYMOTO_URL") . "api/poison-motor/export";
         $includePrices = @json_decode($request->getContent(), true)["includePrice"] ?? false;
+        $onlyPrice = @json_decode($request->getContent(), true)["onlyPrice"] ?? false;
         try {
             $response = \Illuminate\Support\Facades\Http::post($ep);
             if ($response->successful()) {
                 $response = $response->json();
                 $products = $response['products'];
-                
                 $categories = $response['categories'];
-                $resultProducts = Product::poisonProductsImport($products, $includePrices);
+                $resultProducts = Product::poisonProductsImport($products, $includePrices,$onlyPrice);
                 $resultCategories = Category::poisonImportCategories($categories);
                 return [
                     'status' => true,

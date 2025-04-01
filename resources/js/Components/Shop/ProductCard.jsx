@@ -37,7 +37,7 @@ const ProductCard = ({ product }) => {
                     <img
                         src={product.images[0] || '/logo.png'}
                         alt={product.name}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                        className="w-full h-full object-contain hover:scale-105 transition-transform duration-300"
                     />
                     <div className="absolute inset-0 flex items-center justify-center">
                         <img
