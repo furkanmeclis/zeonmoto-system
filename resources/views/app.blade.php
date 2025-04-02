@@ -42,12 +42,12 @@
 
         <!-- Google Analytics -->
         <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-5B9Q9SZJ6H"></script>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-FE788RLG6H"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-5B9Q9SZJ6H');
+            gtag('config', 'G-FE788RLG6H');
         </script>
     </head>
     <body class="font-sans antialiased">
